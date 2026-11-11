@@ -906,7 +906,12 @@ void RasterizerVulkan::PrepareDraw(bool is_indexed, Func&& draw_func, bool is_in
         frame_dump.NoteDraw(pipeline->ShaderHashes());
         if (frame_dump.CapturingSampled()) {
             boost::container::small_vector<FrameDump::Sampled, 16> sampled;
-            for (const auto& image : pipeline->SampledImages()) {
+            // Index loop, not a range-for: on MSVC 18.12 a range-for here, combined with the
+            // aggregate push_back below, corrupts name lookup for the rest of PrepareDraw
+            // (C2039 "not a member" on every later pipeline->... member call).
+            const auto images = pipeline->SampledImages();
+            for (size_t i = 0; i < images.size(); ++i) {
+                const auto& image = images[i];
                 sampled.push_back({image.stage, image.tic, &texture_cache.GetImageView(image.id),
                                    &texture_cache.GetSampler(image.sampler)});
             }
