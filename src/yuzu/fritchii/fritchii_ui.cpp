@@ -52,17 +52,17 @@
 namespace FritchiiUi {
 namespace {
 
-// Graphite
-const QColor Background{0x11, 0x11, 0x13};
-const QColor Raised{0x1b, 0x1b, 0x1f};
-const QColor Field{0x18, 0x18, 0x1b};
-const QColor Button{0x1f, 0x1f, 0x24};
-const QColor Text{0xec, 0xec, 0xf1};
-const QColor TextSecondary{0x9a, 0x9a, 0xa8};
-const QColor TextDisabled{0x55, 0x55, 0x5f};
-const QColor IconIdle{0x6b, 0x6b, 0x78};
-const QColor Accent{0xa7, 0x8b, 0xfa};
-const QColor OnAccent{0x1c, 0x14, 0x33};
+// Amethyst
+const QColor Background{0x15, 0x10, 0x1f};
+const QColor Raised{0x20, 0x1a, 0x2e};
+const QColor Field{0x1c, 0x16, 0x28};
+const QColor Button{0x24, 0x1c, 0x38};
+const QColor Text{0xed, 0xe9, 0xfb};
+const QColor TextSecondary{0xa7, 0x9e, 0xd6};
+const QColor TextDisabled{0x6a, 0x5f, 0x96};
+const QColor IconIdle{0x7e, 0x71, 0xb8};
+const QColor Accent{0xb1, 0x8c, 0xff};
+const QColor OnAccent{0x1a, 0x0f, 0x38};
 
 QPalette GraphitePalette() {
     QPalette p;
@@ -81,11 +81,11 @@ QPalette GraphitePalette() {
     p.setColor(QPalette::HighlightedText, OnAccent);
     p.setColor(QPalette::Link, Accent);
     p.setColor(QPalette::LinkVisited, Accent);
-    p.setColor(QPalette::Light, QColor(0x2e, 0x2e, 0x35));
-    p.setColor(QPalette::Midlight, QColor(0x26, 0x26, 0x2c));
-    p.setColor(QPalette::Mid, QColor(0x22, 0x22, 0x27));
-    p.setColor(QPalette::Dark, QColor(0x0c, 0x0c, 0x0e));
-    p.setColor(QPalette::Shadow, QColor(0x05, 0x05, 0x06));
+    p.setColor(QPalette::Light, QColor(0x3a, 0x2f, 0x58));
+    p.setColor(QPalette::Midlight, QColor(0x2a, 0x21, 0x40));
+    p.setColor(QPalette::Mid, QColor(0x2c, 0x24, 0x40));
+    p.setColor(QPalette::Dark, QColor(0x0e, 0x0b, 0x16));
+    p.setColor(QPalette::Shadow, QColor(0x06, 0x04, 0x0a));
     for (const auto role : {QPalette::WindowText, QPalette::Text, QPalette::ButtonText}) {
         p.setColor(QPalette::Disabled, role, TextDisabled);
     }
@@ -130,7 +130,7 @@ bool Enabled() {
         if (qEnvironmentVariableIntValue("FRITCHII_CLASSIC_UI") != 0) {
             return false;
         }
-        return std::string_view{Common::g_build_name} == "Fritchii";
+        return std::string_view{Common::g_build_name} == "TerraSwitch 2";
     }();
     return enabled;
 }
@@ -271,7 +271,7 @@ void RestructureMenus(Ui::MainWindow& ui, QMainWindow& window, const MenuHooks& 
     ui.menu_Help->insertAction(first_help, delete_cache);
     ui.menu_Help->insertSeparator(first_help);
     ui.menu_Help->insertAction(first_help, whats_new);
-    auto* discord = new QAction(Icon(QStringLiteral("community"), 16), tr("Fritchii &Discord"), &window);
+    auto* discord = new QAction(Icon(QStringLiteral("community"), 16), tr("TerraSwitch 2 &Discord"), &window);
     QObject::connect(discord, &QAction::triggered, &window, [] { OpenDiscord(); });
     auto* donate = new QAction(Icon(QStringLiteral("heart"), 16), tr("D&onate"), &window);
     QObject::connect(donate, &QAction::triggered, &window, [] { OpenDonate(); });
@@ -324,7 +324,7 @@ void RestructureMenus(Ui::MainWindow& ui, QMainWindow& window, const MenuHooks& 
     Rename(ui.action_Load_Amiibo, tr("&Load or Remove Amiibo..."));
     Rename(ui.action_Firmware_From_Folder, tr("From &Folder..."));
     Rename(ui.action_Firmware_From_ZIP, tr("From &ZIP..."));
-    Rename(ui.action_About, tr("&About Fritchii"));
+    Rename(ui.action_About, tr("&About TerraSwitch 2"));
     Rename(ui.action_Eden_Dependencies, tr("&Open-Source Components"));
 }
 
@@ -447,7 +447,7 @@ QProgressBar {
   max-height: 6px;
 }
 QProgressBar::chunk {
-  background-color: #a78bfa;
+  background-color: #b18cff;
   border-radius: 3px;
 })";
 }
@@ -554,16 +554,16 @@ void CopyDataFromOldFolder(QMainWindow& window) {
     namespace fs = std::filesystem;
     using namespace Common::FS;
     if (IsPortableMode()) {
-        QMessageBox::information(&window, QStringLiteral("Fritchii"),
-                                 QObject::tr("This Fritchii keeps its data in the user folder next to "
-                                    "lichii.exe."));
+        QMessageBox::information(&window, QStringLiteral("TerraSwitch 2"),
+                                 QObject::tr("TerraSwitch 2 keeps its data in the user folder next to "
+                                    "terraswitch2.exe."));
         return;
     }
     const bool any = std::ranges::any_of(
         std::array{LegacyEdenDir, LichiiDir, YuzuDir, SuyuDir, SudachiDir, CitronDir},
         [](EmuPath path) { return fs::is_directory(GetLegacyPath(path)); });
     if (!any) {
-        QMessageBox::information(&window, QStringLiteral("Fritchii"),
+        QMessageBox::information(&window, QStringLiteral("TerraSwitch 2"),
                                  QObject::tr("No eden or lichii folder was found in %APPDATA%."));
         return;
     }
@@ -575,7 +575,7 @@ void CopyDataFromOldFolder(QMainWindow& window) {
     try {
         FrontendCommon::RequestProfileImport(choice->Serialize());
     } catch (const std::exception& error) {
-        QMessageBox::warning(&window, QStringLiteral("Fritchii"), QString::fromUtf8(error.what()));
+        QMessageBox::warning(&window, QStringLiteral("TerraSwitch 2"), QString::fromUtf8(error.what()));
         return;
     }
     // The copy runs when Fritchii starts, before anything reads the settings.

@@ -119,8 +119,8 @@ struct NullRenderWidget : public RenderWidget {
 GRenderWindow::GRenderWindow(MainWindow* parent,
                              std::shared_ptr<InputCommon::InputSubsystem> input_subsystem_)
     : QWidget(parent), input_subsystem{std::move(input_subsystem_)} {
-    if (std::string_view{Common::g_build_name} == "Fritchii") {
-        setWindowTitle(QStringLiteral("Fritchii %1").arg(QString::fromUtf8(Common::g_build_version)));
+    if (std::string_view{Common::g_build_name} == "TerraSwitch 2") {
+        setWindowTitle(QStringLiteral("TerraSwitch 2 %1").arg(QString::fromUtf8(Common::g_build_version)));
     } else {
         setWindowTitle(QStringLiteral("Lichii %1 | %2-%3")
                            .arg(QString::fromUtf8(Common::g_build_name),
@@ -868,7 +868,7 @@ bool GRenderWindow::InitializeOpenGL() {
     return true;
 #else
     QMessageBox::warning(this, tr("OpenGL not available!"),
-                         tr("Lichii has not been compiled with OpenGL support."));
+                         tr("TerraSwitch 2 has not been compiled with OpenGL support."));
     return false;
 #endif
 }

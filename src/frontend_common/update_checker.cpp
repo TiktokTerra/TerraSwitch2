@@ -189,7 +189,7 @@ std::optional<FritchiiVersion> ParseFritchiiVersion(std::string_view text) {
 }
 
 std::optional<FritchiiVersion> ParseBuildVersion(std::string_view build_version) {
-    for (const std::string_view prefix : {"Fritchii v", "Frizti v"}) {
+    for (const std::string_view prefix : {"Fritchii v", "Frizti v", "TerraSwitch 2 v"}) {
         if (build_version.starts_with(prefix)) {
             return ParseFritchiiVersion(build_version.substr(prefix.size()));
         }
@@ -198,9 +198,9 @@ std::optional<FritchiiVersion> ParseBuildVersion(std::string_view build_version)
 }
 
 std::optional<FritchiiVersion> RunningVersion() {
-    // Fritchii builds carry the name apart from the version ("Fritchii" + "v4").
-    if (std::string_view{Common::g_build_name} == "Fritchii") {
-        return ParseBuildVersion(fmt::format("Fritchii {}", Common::g_build_version));
+    // TerraSwitch 2 builds carry the name apart from the version ("TerraSwitch 2" + "v4").
+    if (std::string_view{Common::g_build_name} == "TerraSwitch 2") {
+        return ParseBuildVersion(fmt::format("TerraSwitch 2 {}", Common::g_build_version));
     }
     return ParseBuildVersion(Common::g_build_version);
 }

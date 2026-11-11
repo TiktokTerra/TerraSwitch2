@@ -23,7 +23,7 @@ class MainWindow;
 // keeps the upstream UI and merges from Lichii stay clean. Shared files only call in here.
 namespace FritchiiUi {
 
-/// Fritchii builds (g_build_name "Fritchii"). FRITCHII_CLASSIC_UI=1 shows the upstream UI.
+/// TerraSwitch 2 builds (g_build_name "TerraSwitch 2"). FRITCHII_CLASSIC_UI=1 shows the upstream UI.
 [[nodiscard]] bool Enabled();
 
 /// Fusion style, the Graphite palette, Inter and the stylesheet. Does nothing (and returns false)

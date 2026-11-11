@@ -89,7 +89,7 @@ QString VersionName() {
     if (!version.isEmpty() && !version.startsWith(QLatin1Char('v'))) {
         version.prepend(QLatin1Char('v'));
     }
-    return QStringLiteral("Fritchii %1").arg(version).trimmed();
+    return QStringLiteral("TerraSwitch 2 %1").arg(version).trimmed();
 }
 
 bool ShouldShowWhatsNew(bool used_before) {

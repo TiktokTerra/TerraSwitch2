@@ -2206,7 +2206,7 @@ void MainWindow::BootGame(const QString& filename, Service::AM::FrontendAppletPa
                    "Vulkan, 1x resolution, GPU Fast, asynchronous shaders, BC3, conservative VRAM, "
                    "reactive flushing off, FIFO Relaxed VSync, handheld mode, ScaleForce, and "
                    "FXAA.\n\n"
-                   "They apply to Mario Kart World until Lichii is closed. Your saved settings "
+                   "They apply to Mario Kart World until TerraSwitch 2 is closed. Your saved settings "
                    "are not changed."),
                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes;
         LOG_INFO(Config, "MKW recommended settings accepted: {}", use_recommended_mkw_settings);
@@ -3903,7 +3903,7 @@ void MainWindow::OnConfigure() {
 
         if (!restore.isEmpty() && !FritchiiUi::RestoreSettingsFiles(restore)) {
             QMessageBox::warning(this, tr("Restore Settings"),
-                                 tr("Some settings could not be restored. Fritchii's defaults "
+                                 tr("Some settings could not be restored. TerraSwitch 2's defaults "
                                     "fill the gaps."));
         }
         config = std::make_unique<QtConfig>();
@@ -5077,7 +5077,7 @@ void MainWindow::OnEmulatorUpdateAvailable() {
         QString text;
         switch (result.failure) {
         case UpdateChecker::Failure::RateLimited:
-            text = tr("Could not check for updates: GitHub rate limit reached. Fritchii will try "
+            text = tr("Could not check for updates: GitHub rate limit reached. TerraSwitch 2 will try "
                       "again at the next start.");
             break;
         case UpdateChecker::Failure::Http:
@@ -5144,7 +5144,7 @@ void MainWindow::ShowRestartNote() {
         QTimer::singleShot(1000, this, &MainWindow::ShowRestartNote);
         return;
     }
-    QMessageBox::information(this, tr("Fritchii"), restart_note);
+    QMessageBox::information(this, tr("TerraSwitch 2"), restart_note);
 }
 
 void MainWindow::ShowUpdate(const UpdateChecker::CheckResult& result) {
@@ -5649,7 +5649,7 @@ void MainWindow::OnCheckGraphicsBackend() {
         UISettings::values.gui_force_x11.SetValue(true);
         GraphicsBackend::SetForceX11(true);
         QMessageBox::information(this, tr("Restart Required"),
-                                 tr("Restart Lichii to apply the X11 backend."));
+                                 tr("Restart TerraSwitch 2 to apply the X11 backend."));
     }
 }
 #endif
@@ -5774,8 +5774,8 @@ bool MainWindow::ConfirmClose() {
         UISettings::values.confirm_before_stopping.GetValue() == ConfirmStop::Ask_Based_On_Game)
         return true;
 
-    const auto text = tr("Are you sure you want to close Lichii?");
-    return question(this, tr("Lichii"), text);
+    const auto text = tr("Are you sure you want to close TerraSwitch 2?");
+    return question(this, tr("TerraSwitch 2"), text);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
@@ -5881,7 +5881,7 @@ bool MainWindow::ConfirmChangeGame() {
 
     // Use custom question to link controller navigation
     return question(
-        this, tr("Lichii"),
+        this, tr("TerraSwitch 2"),
         tr("Are you sure you want to stop the emulation? Any unsaved progress will be lost."),
         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 }
@@ -5890,10 +5890,10 @@ bool MainWindow::ConfirmForceLockedExit() {
     if (QtCommon::emu_thread == nullptr)
         return true;
 
-    const auto text = tr("The currently running application has requested Lichii to not exit.\n\n"
+    const auto text = tr("The currently running application has requested TerraSwitch 2 to not exit.\n\n"
                          "Would you like to bypass this and exit anyway?");
 
-    return question(this, tr("Lichii"), text);
+    return question(this, tr("TerraSwitch 2"), text);
 }
 
 void MainWindow::RequestGameExit() {

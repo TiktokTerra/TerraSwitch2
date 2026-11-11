@@ -45,7 +45,7 @@ namespace fs = std::filesystem;
 
 namespace {
 
-constexpr wchar_t ExeName[] = L"lichii.exe";
+constexpr wchar_t ExeName[] = L"terraswitch2.exe";
 // Set for a restarted process to a note it shows once it is up, such as "v5 is installed".
 constexpr char RestartNoteVariable[] = "LICHII_UPDATE_NOTE";
 
@@ -87,7 +87,7 @@ std::string PathText(const fs::path& path) {
 
 QString FritchiiName(const QString& version) {
     return version.isEmpty() ? QCoreApplication::translate("UpdateDialog", "the previous version")
-                             : QStringLiteral("Fritchii v%1").arg(version);
+                             : QStringLiteral("TerraSwitch 2 v%1").arg(version);
 }
 
 std::string RunningVersionText() {
@@ -144,7 +144,7 @@ UpdateDialog::UpdateDialog(const Common::Net::Release& release,
         ui->version->setText(
             FritchiiUi::Enabled()
                 ? tr("%1 is ready").arg(QString::fromStdString(release.title))
-                : tr("%1 is available. You have Fritchii v%2.")
+                : tr("%1 is available. You have TerraSwitch 2 v%2.")
                       .arg(QString::fromStdString(release.title),
                            QString::fromStdString(RunningVersionText())));
         auto* install = ui->buttonBox->button(QDialogButtonBox::Yes);
@@ -160,8 +160,8 @@ UpdateDialog::UpdateDialog(const Common::Net::Release& release,
         }
         install->setText(tr("Install"));
         ui->label_2->setText(Updater::CanInstallInPlace()
-                                 ? tr("Fritchii will download the update, install it and restart. "
-                                      "Your settings, saves and keys are not changed.")
+                                 ? tr("TerraSwitch 2 will download the update, install it and "
+                                      "restart. Your settings, saves and keys are not changed.")
                                  : tr("Would you like to download this update?"));
         connect(this, &QDialog::accepted, this, &UpdateDialog::Download);
         return;
@@ -221,10 +221,10 @@ void UpdateDialog::Download() {
         LOG_WARNING(Frontend, "Cannot write to {}, downloading the update instead",
                     PathText(InstallDir()));
         Notify(parentWidget(), QMessageBox::Information, tr("Update Needs to Be Installed by Hand"),
-               tr("Fritchii can't write to its folder (%1), so it can't update itself there. The "
-                  "update will be downloaded instead: unzip it and copy its contents over your "
-                  "Fritchii folder, or move Fritchii to a folder you can write to, such as "
-                  "Documents.")
+               tr("TerraSwitch 2 can't write to its folder (%1), so it can't update itself there. "
+                  "The update will be downloaded instead: unzip it and copy its contents over "
+                  "your TerraSwitch 2 folder, or move TerraSwitch 2 to a folder you can write "
+                  "to, such as Documents.")
                    .arg(QDir::toNativeSeparators(QString::fromStdWString(InstallDir().wstring()))));
     }
 #endif
@@ -264,12 +264,12 @@ void UpdateDialog::InstallInPlace() {
     const UpdateInstaller::Lock lock{install_dir / UpdateInstaller::LockName};
     if (!lock.Held()) {
         Notify(parentWidget(), QMessageBox::Critical, tr("Failed to install the update"),
-               tr("Another Fritchii window is already updating this folder."));
+               tr("Another TerraSwitch 2 window is already updating this folder."));
         return;
     }
     if (fs::exists(install_dir / UpdateInstaller::JournalName)) {
         Notify(parentWidget(), QMessageBox::Critical, tr("Failed to install the update"),
-               tr("An earlier update is unfinished. Start Fritchii again to "
+               tr("An earlier update is unfinished. Start TerraSwitch 2 again to "
                   "finish it first."));
         return;
     }
@@ -315,7 +315,7 @@ void UpdateDialog::InstallInPlace() {
 
     const auto package = UpdateInstaller::FindPackageRoot(unpacked, ExeName);
     if (!package) {
-        fail(tr("The downloaded update does not contain lichii.exe."));
+        fail(tr("The downloaded update does not contain terraswitch2.exe."));
         return;
     }
 
@@ -331,16 +331,16 @@ void UpdateDialog::InstallInPlace() {
         return;
     case UpdateInstaller::Outcome::Unchanged:
         LOG_ERROR(Frontend, "Could not install {}: {}", m_release.tag, ec.message());
-        fail(tr("Could not replace the files of this version (%1). Fritchii was not changed.")
+        fail(tr("Could not replace the files of this version (%1). TerraSwitch 2 was not changed.")
                  .arg(ErrorText(ec)));
         return;
     case UpdateInstaller::Outcome::Interrupted:
         LOG_CRITICAL(Frontend, "Installing {} failed and could not be undone: {}", m_release.tag,
                      ec.message());
         Notify(parentWidget(), QMessageBox::Critical, tr("Failed to install the update"),
-               tr("The update failed (%1) and some files could not be put back. Close Fritchii and "
+               tr("The update failed (%1) and some files could not be put back. Close TerraSwitch 2 and "
                   "start it again to restore the previous version. If it does not start, download "
-                  "the release again and unzip it over your Fritchii folder; your user data is not "
+                  "the release again and unzip it over your TerraSwitch 2 folder; your user data is not "
                   "affected.")
                    .arg(ErrorText(ec)));
         return;
@@ -557,9 +557,9 @@ bool FinishPendingSwap(QWidget* window) {
             QCoreApplication::translate("Updater", "Interrupted Update"),
             QCoreApplication::translate(
                 "Updater",
-                "An update was interrupted and could not be undone (%1). Close every Fritchii "
-                "window and start Fritchii again. If it keeps failing, download the release again "
-                "and unzip it over your Fritchii folder; your user data is not affected.")
+                "An update was interrupted and could not be undone (%1). Close every TerraSwitch 2 "
+                "window and start TerraSwitch 2 again. If it keeps failing, download the release again "
+                "and unzip it over your TerraSwitch 2 folder; your user data is not affected.")
                 .arg(ErrorText(ec)));
         return false;
     }
@@ -583,14 +583,14 @@ void RollBack(QWidget* window) {
     const auto install_dir = InstallDir();
     if (!UpdateInstaller::IsWritable(install_dir)) {
         Notify(window, QMessageBox::Critical, title,
-               QCoreApplication::translate("Updater", "Fritchii can't write to its folder (%1).")
+               QCoreApplication::translate("Updater", "TerraSwitch 2 can't write to its folder (%1).")
                    .arg(QDir::toNativeSeparators(QString::fromStdWString(InstallDir().wstring()))));
         return;
     }
     const auto answer =
         Notify(window, QMessageBox::Question, title,
                QCoreApplication::translate(
-                   "Updater", "Go back to %1? Fritchii will restart. Your settings, saves "
+                   "Updater", "Go back to %1? TerraSwitch 2 will restart. Your settings, saves "
                               "and keys are not changed, and you can switch back to this "
                               "version the same way.")
                    .arg(FritchiiName(*version)),
@@ -602,7 +602,7 @@ void RollBack(QWidget* window) {
     const UpdateInstaller::Lock lock{install_dir / UpdateInstaller::LockName};
     if (!lock.Held()) {
         Notify(window, QMessageBox::Critical, title,
-               QCoreApplication::translate("Updater", "Another Fritchii window is already "
+               QCoreApplication::translate("Updater", "Another TerraSwitch 2 window is already "
                                                       "updating this folder."));
         return;
     }
@@ -622,7 +622,7 @@ void RollBack(QWidget* window) {
         UpdateInstaller::CleanStaging(install_dir);
         Notify(window, QMessageBox::Critical, title,
                QCoreApplication::translate("Updater",
-                                           "Could not roll back (%1). Fritchii was not changed.")
+                                           "Could not roll back (%1). TerraSwitch 2 was not changed.")
                    .arg(ErrorText(ec)));
         return;
     case UpdateInstaller::Outcome::Interrupted:
@@ -630,7 +630,7 @@ void RollBack(QWidget* window) {
         Notify(window, QMessageBox::Critical, title,
                QCoreApplication::translate(
                    "Updater", "Rolling back failed (%1) and some files could not be put "
-                              "back. Close Fritchii and start it again to restore this version.")
+                              "back. Close TerraSwitch 2 and start it again to restore this version.")
                    .arg(ErrorText(ec)));
         return;
     }
@@ -645,7 +645,7 @@ bool Restart(QWidget* window, const QString& note) {
         LOG_CRITICAL(Frontend, "Not restarting {}: it is not the installed version", PathText(exe));
         Notify(window, QMessageBox::Critical,
                QCoreApplication::translate("Updater", "Failed to restart"),
-               QCoreApplication::translate("Updater", "Please start Fritchii again yourself."));
+               QCoreApplication::translate("Updater", "Please start TerraSwitch 2 again yourself."));
         return false;
     }
     std::vector<std::string> arguments;
@@ -675,7 +675,7 @@ bool Restart(QWidget* window, const QString& note) {
         LOG_ERROR(Frontend, "Could not start {}", program.toStdString());
         Notify(window, QMessageBox::Critical,
                QCoreApplication::translate("Updater", "Failed to restart"),
-               QCoreApplication::translate("Updater", "Please start Fritchii again yourself."));
+               QCoreApplication::translate("Updater", "Please start TerraSwitch 2 again yourself."));
         return false;
     }
     LOG_INFO(Frontend, "Restarting {}", PathText(exe));

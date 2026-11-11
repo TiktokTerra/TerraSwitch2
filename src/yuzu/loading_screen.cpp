@@ -39,19 +39,19 @@ QProgressBar {
   padding: 2px;
 }
 QProgressBar::chunk {
-  background-color: #ff3c28;
+  background-color: #b18cff;
   width: 1px;
 })";
 
 constexpr char PROGRESSBAR_STYLE_COMPLETE[] = R"(
 QProgressBar {
-  background-color: #0ab9e6;
+  background-color: #3d2f68;
   border: 2px solid white;
   border-radius: 4px;
   padding: 2px;
 }
 QProgressBar::chunk {
-  background-color: #ff3c28;
+  background-color: #b18cff;
 })";
 
 LoadingScreen::LoadingScreen(QWidget* parent)

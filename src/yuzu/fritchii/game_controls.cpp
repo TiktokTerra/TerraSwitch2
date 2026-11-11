@@ -145,7 +145,7 @@ void GameControls::paintEvent(QPaintEvent*) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(QColor(255, 255, 255, 22));
-    painter.setBrush(QColor(0x16, 0x16, 0x1a, 235));
+    painter.setBrush(QColor(0x1a, 0x14, 0x28, 235));
     painter.drawRoundedRect(QRectF(rect()).adjusted(0.5, 0.5, -0.5, -0.5), 14, 14);
 }
 

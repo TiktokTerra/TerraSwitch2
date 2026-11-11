@@ -72,7 +72,7 @@ UserDataMigrator::UserDataMigrator(QMainWindow* main_window) {
                 QMessageBox::Retry | QMessageBox::Close, QMessageBox::Retry);
             if (answer != QMessageBox::Retry) {
                 throw std::runtime_error(
-                    "Import recovery was postponed. Relaunch Lichii to retry.");
+                    "Import recovery was postponed. Relaunch TerraSwitch 2 to retry.");
             }
             Migration::Recover(state_dir);
         }
@@ -140,11 +140,11 @@ void UserDataMigrator::ShowMigrationPrompt(QMainWindow* main_window) {
                      [=](bool linked) { clear_shaders->setEnabled(!linked); });
     update_cache_default();
     migration_prompt.setText(
-        QObject::tr("Import an existing emulator profile into Lichii?\n"
+        QObject::tr("Import an existing emulator profile into TerraSwitch 2?\n"
                     "Copy keeps the original profile unchanged and is recommended.\n"
                     "Move retains a recovery backup and requires space for a full copy.\n"
                     "Link shares settings and saves with the source emulator.\n"
-                    "Existing Lichii data is kept in backup directories, not merged or deleted.\n\n"
+                    "Existing TerraSwitch 2 data is kept in backup directories, not merged or deleted.\n\n"
                     "Close the source emulator, then choose its profile below.\n"
                     "Close this window to decide on the next launch."));
     migration_prompt.addButton(QObject::tr("Import"));
@@ -155,7 +155,7 @@ void UserDataMigrator::ShowMigrationPrompt(QMainWindow* main_window) {
     QAbstractButton* button = migration_prompt.clickedButton();
 
     if (button == nullptr) {
-        throw std::runtime_error("Import was postponed. Relaunch Lichii to choose a profile.");
+        throw std::runtime_error("Import was postponed. Relaunch TerraSwitch 2 to choose a profile.");
     }
     if (button == fresh) {
         Common::FS::ProfileMigration::MarkFresh(FrontendCommon::ProfileImportStateDirectory());
@@ -170,13 +170,13 @@ void UserDataMigrator::ShowMigrationPrompt(QMainWindow* main_window) {
     MigrateUserData(main_window, clear_shaders->isEnabled() && clear_shaders->isChecked(),
                     strategy);
     if (!migrated) {
-        throw std::runtime_error("Import failed. Relaunch Lichii to retry or recover.");
+        throw std::runtime_error("Import failed. Relaunch TerraSwitch 2 to retry or recover.");
     }
 }
 
 void UserDataMigrator::ShowMigrationCancelledMessage(QMainWindow* main_window) {
     QMessageBox::information(main_window, QObject::tr("Migration"),
-                             QObject::tr("Lichii will use its own profile. Your old emulator "
+                             QObject::tr("TerraSwitch 2 will use its own profile. Your old emulator "
                                          "data has not been changed."),
                              QMessageBox::Ok);
 }
@@ -459,17 +459,17 @@ std::optional<ProfileImportChoice> UserDataMigrator::AskImport(QWidget* parent, 
         return std::nullopt;
     }
     QDialog dialog(parent);
-    dialog.setWindowTitle(QStringLiteral("Fritchii"));
+    dialog.setWindowTitle(QStringLiteral("TerraSwitch 2"));
     dialog.setWindowFlag(Qt::WindowContextHelpButtonHint, false);
     auto* layout = new QVBoxLayout(&dialog);
     layout->setSpacing(12);
     QFont big = dialog.font();
     big.setPointSizeF(big.pointSizeF() * 1.15);
     auto* text = new QLabel(
-        from_menu ? QObject::tr("Copy your data from another folder?\nFritchii restarts and "
+        from_menu ? QObject::tr("Copy your data from another folder?\nTerraSwitch 2 restarts and "
                                 "copies it over its own. What it has now is kept as a backup.")
-                  : QObject::tr("Fritchii keeps its data in its own folder now.\nCopy your data "
-                                "from another emulator folder?"),
+                  : QObject::tr("TerraSwitch 2 keeps its data in its own folder now.\nCopy your "
+                                "data from another emulator folder?"),
         &dialog);
     text->setFont(big);
     layout->addWidget(text);
@@ -565,9 +565,10 @@ void UserDataMigrator::AutoImport(QMainWindow* main_window,
             return;
         }
         auto* progress = new QProgressDialog(main_window);
-        progress->setWindowTitle(QStringLiteral("Fritchii"));
+        progress->setWindowTitle(QStringLiteral("TerraSwitch 2"));
         progress->setLabelText(
-            QObject::tr("Copying your data from the %1 folder to Fritchii's own folder (%2 GB)...")
+            QObject::tr("Copying your data from the %1 folder to TerraSwitch 2's own folder "
+                        "(%2 GB)...")
                 .arg(folder, Gigabytes(import.copy_bytes)));
         progress->setRange(0, 0);
         progress->setCancelButton(nullptr);
@@ -645,7 +646,7 @@ void UserDataMigrator::AutoImport(QMainWindow* main_window,
         }
         QString what = parts.join(QStringLiteral(", "));
         what[0] = what[0].toUpper();
-        QString text = QObject::tr("Fritchii now keeps its data in its own folder:\n%1\n\n"
+        QString text = QObject::tr("TerraSwitch 2 now keeps its data in its own folder:\n%1\n\n"
                                    "%2 copied from the %3 folder.")
                            .arg(destination_text, what, folder);
         if (!import.linked.empty()) {
@@ -655,13 +656,13 @@ void UserDataMigrator::AutoImport(QMainWindow* main_window,
                                                        : QStringLiteral("nand and sdmc"));
         }
         if (requested) {
-            text += QObject::tr("\n\nFritchii's previous data is kept next to it, in the folders "
+            text += QObject::tr("\n\nTerraSwitch 2's previous data is kept next to it, in the folders "
                                 "ending in \".backup\".");
         }
         text += QObject::tr("\n\nShaders get prepared again the first time you start a game.\n"
                             "Your old folder was not changed: %1")
                     .arg(old_text);
-        QMessageBox box(QMessageBox::Information, QStringLiteral("Fritchii"), text,
+        QMessageBox box(QMessageBox::Information, QStringLiteral("TerraSwitch 2"), text,
                         QMessageBox::Ok, main_window);
         auto* open = box.addButton(QObject::tr("Open folder"), QMessageBox::ActionRole);
         box.exec();
@@ -674,10 +675,10 @@ void UserDataMigrator::AutoImport(QMainWindow* main_window,
     if (Migration::GetState(state_dir) == Migration::State::Pending) {
         Migration::Recover(state_dir);
     }
-    QMessageBox box(QMessageBox::Warning, QStringLiteral("Fritchii"),
-                    QObject::tr("Your data in the %1 folder could not be copied to Fritchii's "
+    QMessageBox box(QMessageBox::Warning, QStringLiteral("TerraSwitch 2"),
+                    QObject::tr("Your data in the %1 folder could not be copied to TerraSwitch 2's "
                                 "folder. Nothing was changed.\n\n%2\n\nClose any emulator or "
-                                "program using it, then start Fritchii again.")
+                                "program using it, then start TerraSwitch 2 again.")
                         .arg(folder, failure),
                     QMessageBox::NoButton, main_window);
     auto* later = box.addButton(QObject::tr("Close and try again"), QMessageBox::AcceptRole);

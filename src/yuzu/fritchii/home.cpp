@@ -54,7 +54,7 @@ QPixmap Rounded(const QPixmap& source, int size, int radius) {
         clip.addRoundedRect(QRectF(0, 0, size, size), radius, radius);
         painter.setClipPath(clip);
         if (source.isNull()) {
-            painter.fillRect(QRect(0, 0, size, size), QColor(0x24, 0x23, 0x2c));
+            painter.fillRect(QRect(0, 0, size, size), QColor(0x2b, 0x21, 0x44));
         } else {
             painter.drawPixmap(QRect(0, 0, size, size), source);
         }

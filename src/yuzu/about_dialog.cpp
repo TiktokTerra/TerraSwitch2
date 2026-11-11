@@ -33,8 +33,8 @@ AboutDialog::AboutDialog(QWidget* parent)
         ui->labelBuildInfo->text().arg(QString::fromStdString(yuzu_build_version),
                                        QString::fromUtf8(Common::g_build_date).left(10)));
     if (FritchiiUi::Enabled()) {
-        setWindowTitle(tr("About Fritchii"));
-        ui->labelYuzu->setText(QStringLiteral("<span style='font-size:30px'>Fritchii</span>"));
+        setWindowTitle(tr("About TerraSwitch 2"));
+        ui->labelYuzu->setText(QStringLiteral("<span style='font-size:30px'>TerraSwitch 2</span>"));
     }
 }
 

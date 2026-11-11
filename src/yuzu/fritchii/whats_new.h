@@ -23,7 +23,7 @@ namespace FritchiiUi {
 /// bundled), roomier lines and paragraphs.
 void SetNotes(QTextBrowser* browser, const QString& markdown);
 
-/// "Fritchii v5"
+/// "TerraSwitch 2 v5"
 [[nodiscard]] QString VersionName();
 
 /// True once per version, after an update: the version differs from the last one shown and the
