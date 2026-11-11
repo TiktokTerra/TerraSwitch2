@@ -19,11 +19,15 @@ class QToolButton;
 
 namespace FritchiiUi {
 
+/// The Performance button's one-click graphics presets.
+enum class PerfPreset { MaxFps, Balanced, Quality };
+
 /// What the home screen asks the main window to do.
 struct HomeHooks {
     std::function<void(const QString& path, u64 program_id)> play;
     std::function<void()> add_folder;
     std::function<void()> open_settings;
+    std::function<void()> save_config; ///< after the Performance presets changed settings
     std::function<void(u64 program_id, const std::string& path)> game_settings;
     std::function<void(u64 program_id)> delete_shader_cache; ///< after a confirmation
     /// Fills a menu with the game list's own right-click entries for the game (mod folders,
@@ -58,6 +62,9 @@ private:
     void ShowList();
     void Restore();
     void Refresh();
+
+    /// Writes one graphics preset into the settings, then saves and applies them.
+    void ApplyPreset(PerfPreset preset);
 
     QWidget* MakeRail();
     QWidget* MakePage();

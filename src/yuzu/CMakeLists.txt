@@ -215,6 +215,8 @@ add_executable(yuzu
     fritchii/home.h
     fritchii/game_controls.cpp
     fritchii/game_controls.h
+    fritchii/glyphs.cpp
+    fritchii/glyphs.h
     fritchii/main_window_fritchii.cpp
     fritchii/perf_overlay.cpp
     fritchii/perf_overlay.h

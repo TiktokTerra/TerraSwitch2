@@ -10,7 +10,6 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
-#include <QBuffer>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDir>
@@ -18,7 +17,6 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QIcon>
-#include <QImageReader>
 #include <QLocale>
 #include <QMainWindow>
 #include <QMenu>
@@ -36,6 +34,7 @@
 #include "common/fs/fs_paths.h"
 #include "common/fs/path_util.h"
 #include "frontend_common/profile_import.h"
+#include "yuzu/fritchii/glyphs.h"
 #include "yuzu/fritchii/saves_window.h"
 #include "yuzu/user_data_migration.h"
 #include "common/logging.h"
@@ -105,18 +104,6 @@ public:
     }
 };
 
-QPixmap RenderSvg(QByteArray svg, const QColor& color, int px) {
-    svg.replace("currentColor", color.name().toLatin1());
-    QBuffer buffer(&svg);
-    buffer.open(QIODevice::ReadOnly);
-    QImageReader reader(&buffer, "svg");
-    const qreal ratio = qApp->devicePixelRatio();
-    reader.setScaledSize(QSize(px, px) * ratio);
-    QPixmap pixmap = QPixmap::fromImage(reader.read());
-    pixmap.setDevicePixelRatio(ratio);
-    return pixmap;
-}
-
 void Rename(QAction* action, const QString& text) {
     if (action) {
         action->setText(text);
@@ -172,9 +159,9 @@ QIcon Icon(const QString& name, int px) {
     }
     const QByteArray svg = file.readAll();
     QIcon icon;
-    const QPixmap idle = RenderSvg(svg, IconIdle, px);
-    const QPixmap hover = RenderSvg(svg, Text, px);
-    const QPixmap on = RenderSvg(svg, Accent, px);
+    const QPixmap idle = RenderSvgGlyph(svg, IconIdle, px);
+    const QPixmap hover = RenderSvgGlyph(svg, Text, px);
+    const QPixmap on = RenderSvgGlyph(svg, Accent, px);
     icon.addPixmap(idle, QIcon::Normal, QIcon::Off);
     icon.addPixmap(hover, QIcon::Active, QIcon::Off);
     icon.addPixmap(on, QIcon::Normal, QIcon::On);
@@ -187,7 +174,7 @@ QIcon Glyph(const QString& name, unsigned rgb, int px) {
     if (!file.open(QFile::ReadOnly)) {
         return {};
     }
-    return QIcon(RenderSvg(file.readAll(), QColor::fromRgb(rgb), px));
+    return QIcon(RenderSvgGlyph(file.readAll(), QColor::fromRgb(rgb), px));
 }
 
 void RestructureMenus(Ui::MainWindow& ui, QMainWindow& window, const MenuHooks& hooks) {

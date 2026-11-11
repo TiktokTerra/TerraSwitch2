@@ -118,6 +118,7 @@ void MainWindow::SetUpFritchiiUi() {
         .play = [this](const QString& path, u64 program_id) { OnGameListLoadFile(path, program_id); },
         .add_folder = [this] { OnGameListAddDirectory(); },
         .open_settings = [this] { OnConfigure(); },
+        .save_config = [this] { OnSaveConfig(); },
         .game_settings =
             [this](u64 program_id, const std::string& path) {
                 OpenPerGameConfiguration(program_id, path);

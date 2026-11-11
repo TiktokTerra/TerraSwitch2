@@ -3,9 +3,11 @@
 #include "yuzu/fritchii/home.h"
 
 #include <algorithm>
+#include <array>
 #include <set>
 #include <vector>
 
+#include <QActionGroup>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QDir>
@@ -22,6 +24,7 @@
 #include <QTimer>
 #include <QToolButton>
 
+#include "common/settings.h"
 #include "qt_common/game_list/game_list_p.h"
 #include "yuzu/fritchii/fritchii_ui.h"
 #include "yuzu/fritchii/saves_window.h"
@@ -33,6 +36,46 @@ constexpr u64 OcarinaOfTime = 0x0400486024DEC000ULL;
 constexpr int CoverSize = 200;
 constexpr int TileIcon = 72;
 constexpr int MaxTiles = 7;
+
+/// The graphics settings a Performance preset writes, and the label for its menu entry.
+struct PerfSpec {
+    PerfPreset preset;
+    const char* label;
+    Settings::VSyncMode vsync;
+    Settings::ResolutionSetup resolution;
+    Settings::ScalingFilter filter;
+    Settings::AntiAliasing aa;
+    Settings::GpuAccuracy accuracy;
+    bool async_shaders;
+};
+
+// Max FPS: no vsync, native resolution, the cheapest filter, nothing extra. Balanced: the
+// fork's own defaults. Quality: 2x FSR upscaling with FXAA. All keep the tuned GPU mode.
+constexpr std::array<PerfSpec, 3> kPerfPresets{{
+    {PerfPreset::MaxFps, "Max FPS", Settings::VSyncMode::Immediate,
+     Settings::ResolutionSetup::Res1X, Settings::ScalingFilter::Bilinear,
+     Settings::AntiAliasing::None, Settings::GpuAccuracy::Low, true},
+    {PerfPreset::Balanced, "Balanced", Settings::VSyncMode::Mailbox,
+     Settings::ResolutionSetup::Res1X, Settings::ScalingFilter::ScaleForce,
+     Settings::AntiAliasing::None, Settings::GpuAccuracy::Low, true},
+    {PerfPreset::Quality, "Quality", Settings::VSyncMode::Mailbox, Settings::ResolutionSetup::Res2X,
+     Settings::ScalingFilter::Fsr, Settings::AntiAliasing::Fxaa, Settings::GpuAccuracy::Low, true},
+}};
+
+/// The preset the current settings match, if any (for the menu's check mark).
+[[nodiscard]] const PerfSpec* MatchingPerfPreset() {
+    for (const PerfSpec& spec : kPerfPresets) {
+        if (Settings::values.vsync_mode.GetValue() == spec.vsync &&
+            Settings::values.resolution_setup.GetValue() == spec.resolution &&
+            Settings::values.scaling_filter.GetValue() == spec.filter &&
+            Settings::values.anti_aliasing.GetValue() == spec.aa &&
+            Settings::values.gpu_accuracy.GetValue() == spec.accuracy &&
+            Settings::values.use_asynchronous_shaders.GetValue() == spec.async_shaders) {
+            return &spec;
+        }
+    }
+    return nullptr;
+}
 
 struct Game {
     QString title;
@@ -203,6 +246,13 @@ QWidget* Home::MakeRail() {
     layout->setContentsMargins(11, 16, 11, 16);
     layout->setSpacing(8);
 
+    // The TerraSwitch 2 logo on top of the rail.
+    auto* logo = new QLabel(rail);
+    logo->setPixmap(Rounded(QIcon(QStringLiteral(":/img/lichii.ico")).pixmap(256), 42, 10));
+    logo->setFixedSize(42, 42);
+    layout->addWidget(logo, 0, Qt::AlignHCenter);
+    layout->addSpacing(12);
+
     library_button = RailButton(QStringLiteral("library"), tr("Library"));
     library_button->setCheckable(true);
     connect(library_button, &QToolButton::clicked, this, &Home::ShowHome);
@@ -320,7 +370,36 @@ QWidget* Home::MakePage() {
             hooks.play(hero_path, hero_id);
         }
     });
-    side->addWidget(play, 0, Qt::AlignLeft);
+
+    // Performance presets (Max FPS / Balanced / Quality) next to Play; the detail stays in
+    // the full settings dialog behind "All Settings...".
+    auto* perf = new QPushButton(tr("Performance"), page);
+    perf->setObjectName(QStringLiteral("FritchiiLink"));
+    perf->setCursor(Qt::PointingHandCursor);
+    perf->setFocusPolicy(Qt::NoFocus);
+    connect(perf, &QPushButton::clicked, this, [this, perf] {
+        const PerfSpec* current = MatchingPerfPreset();
+        QMenu menu(perf);
+        auto* group = new QActionGroup(&menu);
+        for (const PerfSpec& spec : kPerfPresets) {
+            QAction* action = menu.addAction(tr(spec.label));
+            action->setCheckable(true);
+            action->setChecked(&spec == current);
+            group->addAction(action);
+            connect(action, &QAction::triggered, this,
+                    [this, preset = spec.preset] { ApplyPreset(preset); });
+        }
+        menu.addSeparator();
+        menu.addAction(tr("All Settings..."), this, [this] { hooks.open_settings(); });
+        menu.exec(perf->mapToGlobal(QPoint(0, perf->height() + 6)));
+    });
+
+    auto* hero_actions = new QHBoxLayout;
+    hero_actions->setSpacing(12);
+    hero_actions->addWidget(play, 0, Qt::AlignVCenter);
+    hero_actions->addWidget(perf, 0, Qt::AlignVCenter);
+    hero_actions->addStretch(1);
+    side->addLayout(hero_actions);
     side->addStretch(1);
     hero->addLayout(side, 1);
     layout->addLayout(hero);
@@ -334,6 +413,24 @@ QWidget* Home::MakePage() {
     layout->addWidget(row_box);
     layout->addStretch(1);
     return page;
+}
+
+void Home::ApplyPreset(PerfPreset preset) {
+    for (const PerfSpec& spec : kPerfPresets) {
+        if (spec.preset != preset) {
+            continue;
+        }
+        Settings::values.vsync_mode.SetValue(spec.vsync);
+        Settings::values.resolution_setup.SetValue(spec.resolution);
+        Settings::values.scaling_filter.SetValue(spec.filter);
+        Settings::values.anti_aliasing.SetValue(spec.aa);
+        Settings::values.gpu_accuracy.SetValue(spec.accuracy);
+        Settings::values.use_asynchronous_shaders.SetValue(spec.async_shaders);
+        if (hooks.save_config) {
+            hooks.save_config();
+        }
+        return;
+    }
 }
 
 void Home::Refresh() {

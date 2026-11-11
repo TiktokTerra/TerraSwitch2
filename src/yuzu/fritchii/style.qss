@@ -46,7 +46,7 @@ QLineEdit, QComboBox, QPlainTextEdit, QTextEdit {
 QLineEdit:focus, QComboBox:focus, QPlainTextEdit:focus, QTextEdit:focus { border-color: #b18cff; }
 QComboBox:hover, QLineEdit:hover { border-color: #433860; }
 QComboBox::drop-down { border: none; width: 26px; }
-QComboBox::down-arrow { image: url(:/fritchii/icons/chevron-down.svg); width: 12px; height: 12px; }
+QComboBox::down-arrow { image: url(:/fritchii/icons/chevron-down.png); width: 12px; height: 12px; }
 QComboBox QAbstractItemView {
     background: #201a2e;
     border: 1px solid #322948;
@@ -68,7 +68,7 @@ QCheckBox::indicator:hover { border-color: #b18cff; }
 QCheckBox::indicator:checked {
     background: #b18cff;
     border-color: #b18cff;
-    image: url(:/fritchii/icons/check.svg);
+    image: url(:/fritchii/icons/check.png);
 }
 QCheckBox::indicator:disabled { background: #171126; border-color: #2a2140; }
 

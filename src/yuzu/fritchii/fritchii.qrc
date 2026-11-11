@@ -12,7 +12,9 @@
         <file>icons/plus.svg</file>
         <file>icons/list.svg</file>
         <file>icons/check.svg</file>
+        <file>icons/check.png</file>
         <file>icons/chevron-down.svg</file>
+        <file>icons/chevron-down.png</file>
         <file>icons/pause.svg</file>
         <file>icons/stop.svg</file>
         <file>icons/restart.svg</file>
