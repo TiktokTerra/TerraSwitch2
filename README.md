@@ -27,9 +27,12 @@ any upstream project.
 
 ## Running it
 
-Builds are produced from source (see below). On Windows, extract the release archive and run
-**terraswitch2.exe**; only use games and system files you have legally obtained. Games, keys and
-firmware are not included.
+Download the latest installer from the
+[releases page](https://github.com/TiktokTerra/TerraSwitch2/releases). The installer is for 64-bit
+Windows and is not code-signed yet, so Windows SmartScreen may warn about an unknown publisher.
+You can also build from source (see below).
+
+Only use games and system files you have legally obtained. Games, keys and firmware are not included.
 
 ### Existing saves and settings
 
