@@ -1,0 +1,1 @@
+This project incorporates parts of the Litchii and Fritchii emulators. Huge thanks to the developers for their work! You can find the links to their Patreon pages directly on this launcher to support them.

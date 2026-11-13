@@ -420,14 +420,23 @@ void UpdateRescalingInfo() {
     TranslateResolutionInfo(setup, info);
 }
 
+namespace {
+/// The Lossless Scaling chain holds three generated frames, so it stops at x4; FSR 3 reaches the
+/// full MAX_FRAME_GEN_MULTIPLIER.
+u32 MaxFrameGenMultiplier() {
+    return values.frame_gen_type.GetValue() == FrameGenType::Lsfg ? 4
+                                                                 : MAX_FRAME_GEN_MULTIPLIER;
+}
+} // Anonymous namespace
+
 u32 FrameGenMultiplier() {
     return std::clamp(values.frame_gen_multiplier.GetValue(), MIN_FRAME_GEN_MULTIPLIER,
-                      MAX_FRAME_GEN_MULTIPLIER);
+                      MaxFrameGenMultiplier());
 }
 
 bool FrameGenActive() {
-    static const bool fritchii = std::string_view{Common::g_build_name} == "TerraSwitch 2";
-    return values.frame_gen.GetValue() && !fritchii;
+    // TerraSwitch 2 offers frame generation too (up to x8), so the fork no longer disables it.
+    return values.frame_gen.GetValue();
 }
 
 namespace {
@@ -472,7 +481,7 @@ size_t FrameGenMaxGenerations() {
         return 0;
     }
     if (values.frame_gen_target_rate.GetValue() != 0) {
-        return MAX_FRAME_GEN_MULTIPLIER - 1;
+        return MaxFrameGenMultiplier() - 1;
     }
     return FrameGenMultiplier() - 1;
 }

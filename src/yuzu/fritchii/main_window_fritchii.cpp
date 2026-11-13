@@ -119,6 +119,12 @@ void MainWindow::SetUpFritchiiUi() {
         .add_folder = [this] { OnGameListAddDirectory(); },
         .open_settings = [this] { OnConfigure(); },
         .save_config = [this] { OnSaveConfig(); },
+        .apply_settings =
+            [] {
+                if (QtCommon::system) {
+                    QtCommon::system->ApplySettings();
+                }
+            },
         .game_settings =
             [this](u64 program_id, const std::string& path) {
                 OpenPerGameConfiguration(program_id, path);

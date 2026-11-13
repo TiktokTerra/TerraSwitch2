@@ -148,8 +148,8 @@ bool ApplyTheme() {
 }
 
 bool HidesSetting(const std::string& label) {
-    // No frame generation in Fritchii (real frames only), and its options are dev tools.
-    return Enabled() && label.starts_with("frame_gen");
+    // Frame generation is offered now (up to x8); only its optical-flow dump stays a dev tool.
+    return Enabled() && label == "frame_gen_dump_flow";
 }
 
 QIcon Icon(const QString& name, int px) {

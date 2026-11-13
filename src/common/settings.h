@@ -485,7 +485,7 @@ struct Values {
     SwitchableSetting<u32, true> frame_gen_multiplier{linkage,
                                                       2,
                                                       2,
-                                                      4,
+                                                      8,
                                                       "frame_gen_multiplier",
                                                       Category::Renderer,
                                                       Specialization::Countable,
@@ -1083,7 +1083,7 @@ void RefreshNvidiaDlssRuntimeSettings();
 NvidiaDlssRuntimeSettings GetNvidiaDlssRuntimeSettings();
 
 constexpr u32 MIN_FRAME_GEN_MULTIPLIER = 2;
-constexpr u32 MAX_FRAME_GEN_MULTIPLIER = 4;
+constexpr u32 MAX_FRAME_GEN_MULTIPLIER = 8;
 
 /// Whether frame generation runs: the setting, and never in Fritchii builds, which hide its
 /// settings (a value left on by an older build made the camera flicker, 2026-11-09).

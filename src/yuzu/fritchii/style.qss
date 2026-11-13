@@ -180,17 +180,71 @@ QToolButton#FritchiiStripButton:hover { background: #3d2f68; }
 QToolButton#FritchiiStripButton:pressed { background: #4d3d80; }
 
 /* Home and rail (fritchii/home.cpp) */
-QWidget#FritchiiRail { background: #0e0b16; }
+QWidget#FritchiiRail { background: #0e0b16; border-right: 1px solid #1c1529; }
 QToolButton#FritchiiRailButton {
     background: transparent;
     border: none;
     border-radius: 12px;
-    padding: 10px;
+    padding: 6px 2px;
+    color: #a79ed6;
+    font-size: 10px;
+    font-weight: 500;
 }
-QToolButton#FritchiiRailButton:hover { background: #201a2e; }
-QToolButton#FritchiiRailButton:checked { background: #2b1f4a; }
+QToolButton#FritchiiRailButton:hover { background: #201a2e; color: #ede9fb; }
+QToolButton#FritchiiRailButton:checked { background: #2b1f4a; color: #ede9fb; }
 QWidget#FritchiiHome { background: #15101f; }
-QLabel#FritchiiHeroTitle { font-size: 30px; font-weight: 500; color: #ede9fb; }
+QFrame#FritchiiHero {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #271c43, stop:0.55 #1c1530, stop:1 #171122);
+    border: 1px solid #2e2547;
+    border-radius: 18px;
+}
+QLabel#FritchiiPageTitle { font-size: 22px; font-weight: 600; color: #ede9fb; }
+QLabel#FritchiiEyebrow { font-size: 11px; font-weight: 600; color: #b18cff; }
+QLabel#FritchiiHeroTitle { font-size: 32px; font-weight: 500; color: #ede9fb; }
+QLabel#FritchiiMeta { font-size: 14px; color: #a79ed6; }
+QLabel#FritchiiSectionTitle { font-size: 16px; font-weight: 600; color: #cfc8ec; }
+QLabel#FritchiiChip {
+    background: #241c38;
+    border: 1px solid #322948;
+    border-radius: 11px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #cfc8ec;
+}
+/* Super FPS: the one chip in the accent, like the Play button. */
+QLabel#FritchiiChip[super="true"] {
+    background: #b18cff;
+    border-color: #b18cff;
+    color: #1a0f38;
+    font-weight: 600;
+}
+/* The home card's graphics presets (fritchii/home.cpp): pills, the current one lit. */
+QPushButton#FritchiiPreset {
+    background: #201a2e;
+    color: #cfc8ec;
+    border: 1px solid #2e2547;
+    border-radius: 13px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 500;
+}
+QPushButton#FritchiiPreset:hover { background: #2a2140; border-color: #3d2f68; color: #ede9fb; }
+QPushButton#FritchiiPreset:checked {
+    background: #b18cff;
+    border-color: #b18cff;
+    color: #1a0f38;
+    font-weight: 600;
+}
+QPushButton#FritchiiPreset:checked:hover { background: #c4a8ff; }
+QPushButton#FritchiiLinkSmall {
+    background: transparent;
+    color: #a79ed6;
+    border: none;
+    border-radius: 7px;
+    padding: 4px 10px;
+    font-size: 13px;
+}
+QPushButton#FritchiiLinkSmall:hover { background: #241c38; color: #ede9fb; }
 QLabel#FritchiiSection { font-size: 14px; color: #a79ed6; }
 QPushButton#FritchiiPlay {
     background: #b18cff;
@@ -221,8 +275,8 @@ QPushButton#FritchiiPlay:pressed { background: #9d6dff; }
 QToolButton#FritchiiTile {
     background: transparent;
     border: none;
-    border-radius: 12px;
-    padding: 8px;
+    border-radius: 14px;
+    padding: 10px 8px;
     color: #cfc8ec;
     font-size: 13px;
 }
